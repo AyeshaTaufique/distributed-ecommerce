@@ -1,7 +1,8 @@
-const USER_API = "http://localhost:5001";
-const PRODUCT_API = "http://localhost:5002";
-const ORDER_API = "http://localhost:5003";
-const PAYMENT_API = "http://localhost:5004";
+// Use environment variables for cloud URLs
+const USER_API = import.meta.env.VITE_USER_API_URL || "http://localhost:5001";
+const PRODUCT_API = import.meta.env.VITE_PRODUCT_API_URL || "http://localhost:5002";
+const ORDER_API = import.meta.env.VITE_ORDER_API_URL || "http://localhost:5003";
+const PAYMENT_API = import.meta.env.VITE_PAYMENT_API_URL || "http://localhost:5004";
 
 // Helper function to get user-friendly error messages
 const getFriendlyErrorMessage = (error, serviceName) => {
