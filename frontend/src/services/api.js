@@ -186,7 +186,6 @@ export async function createOrder(orderData) {
         errorMessage = `Server responded with ${res.status}`;
       }
       
-      // Specific error for order service being down
       if (res.status === 0 || errorMessage.includes('Failed to fetch')) {
         throw new Error("⚠️ Order service is currently unavailable. Please try again later.");
       }
@@ -210,17 +209,17 @@ export async function createOrder(orderData) {
   } catch (error) {
     console.error("Order creation error:", error);
     
-    // ✅ ADD THIS LINE to catch NetworkError
+    // Handle all network-related errors
     if (error.message === 'Failed to fetch' || 
         error.message === 'NetworkError when attempting to fetch resource' ||
-        error.message.includes('unavailable')) {
+        error.message.includes('unavailable') ||
+        error.name === 'TypeError') {
       throw new Error("⚠️ Order service is currently unavailable. Please try again later.");
     }
     
     throw error;
   }
 }
-
 // Payment Service APIs
 export async function processPayment(paymentData) {
   return handleFetch(
