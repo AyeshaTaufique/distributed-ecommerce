@@ -24,7 +24,8 @@ function UserDashboard({ user, products, orders, onLogout, cart, setCart, onChec
         showToast(result.message, "error");
       }
     } catch (err) {
-      showToast("Checkout failed: " + err.message, "error");
+      // ✅ This will now show the friendly message from api.js
+      showToast(err.message || "Checkout failed. Please try again.", "error");
     }
   };
 
