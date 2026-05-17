@@ -210,9 +210,11 @@ export async function createOrder(orderData) {
   } catch (error) {
     console.error("Order creation error:", error);
     
-    // User-friendly message for network errors
-    if (error.message === 'Failed to fetch' || error.message.includes('unavailable')) {
-      throw new Error("⚠️ Order service is currently down. Our team is working on it. Please try again later.");
+    // ✅ ADD THIS LINE to catch NetworkError
+    if (error.message === 'Failed to fetch' || 
+        error.message === 'NetworkError when attempting to fetch resource' ||
+        error.message.includes('unavailable')) {
+      throw new Error("⚠️ Order service is currently unavailable. Please try again later.");
     }
     
     throw error;
