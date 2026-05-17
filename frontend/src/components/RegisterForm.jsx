@@ -1,4 +1,24 @@
 import { useState } from "react";
+import { registerUser } from '../services/api';
+
+// Then simplify handleRegister to:
+const handleRegister = async () => {
+  if (!validateAllFields()) {
+    setMessage("Please fix all errors before submitting");
+    return;
+  }
+  
+  setIsLoading(true);
+  try {
+    const result = await registerUser(username, email, password, address, phone);
+    setMessage("Registration successful!");
+    onRegistered(result.user);
+  } catch (err) {
+    setMessage(err.message || "Registration failed");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
 export default function RegisterForm({ prefill, onRegistered, onCancel }) {
   const [username, setUsername] = useState("");
@@ -90,7 +110,6 @@ export default function RegisterForm({ prefill, onRegistered, onCancel }) {
     
     return !usernameError && !emailError && !passwordError && !addressError && !phoneError;
   };
-
   const handleRegister = async () => {
     if (!validateAllFields()) {
       setMessage("Please fix all errors before submitting");
@@ -99,28 +118,11 @@ export default function RegisterForm({ prefill, onRegistered, onCancel }) {
     
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5001/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          username, 
-          email, 
-          password,
-          address,
-          phone
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage("Registration successful!");
-        onRegistered(data.user);
-      } else {
-        setMessage(data.detail || "Registration failed");
-      }
+      const result = await registerUser(username, email, password, address, phone);
+      setMessage("Registration successful!");
+      onRegistered(result.user);
     } catch (err) {
-      setMessage("Network error. Please try again.");
+      setMessage(err.message || "Registration failed");
     } finally {
       setIsLoading(false);
     }
